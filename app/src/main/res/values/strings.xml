@@ -3,4 +3,6 @@
     <string name="question_text">Durham is the capital of North Carolina.</string>
     <string name="true_button">True</string>
     <string name="false_button">False</string>
+    <string name="correct">Correct!</string>
+    <string name="incorrect">Incorrect… Try again!</string>
 </resources>
