@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     fun topToast(stringId: Int, timeout: Int) {
         val toast = Toast.makeText(this, stringId, timeout)
-        toast.setGravity(Gravity.TOP, 250, 250)
+        toast.setGravity(Gravity.TOP, 0, 250)
         toast.show()
     }
 
