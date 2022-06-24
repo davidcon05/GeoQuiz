@@ -29,12 +29,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/question_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:padding="24dp"
         android:text="@string/question_text"/>
 
@@ -47,13 +49,19 @@
             android:id="@+id/trueBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/true_button"/>
+            android:text="@string/true_button"
+            android:backgroundTint="@color/buttons"
+            android:textColor="@color/black"
+            android:layout_margin="8dp"/>
 
         <Button
             android:id="@+id/falseBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/false_button"/>
+            android:text="@string/false_button"
+            android:backgroundTint="@color/buttons"
+            android:textColor="@color/black"
+            android:layout_margin="8dp"/>
 
     </LinearLayout>
 
