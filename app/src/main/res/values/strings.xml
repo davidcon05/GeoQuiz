@@ -21,4 +21,5 @@
     <string name="stopped_state">Stopped exists in memory and occurs when you close the app</string>
     <string name="paused_state">Paused state occurs when an activity is in memory and partially visible but not in foreground, like during multi-window mode</string>
     <string name="resumed_state">Only one activity can be in the resumed state at a time, it is in memory, visible and in the foreground</string>
+    <string name="onCreate_invoke">We call onCreate to control app state</string>
 </resources>
