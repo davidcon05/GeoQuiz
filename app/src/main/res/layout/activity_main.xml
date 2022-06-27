@@ -46,27 +46,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/prevButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/WTHeader"
-            android:textColor="@color/black"
-            android:text="@string/prevButton"
-            android:drawableEnd="@drawable/arrow_left"
-            android:drawablePadding="4dp"
-            android:layout_margin="4dp"/>
+            android:src="@drawable/arrow_left" />
 
-        <Button
+        <ImageButton
             android:id="@+id/nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/WTHeader"
-            android:textColor="@color/black"
-            android:text="@string/nextButton"
-            android:drawableLeft="@drawable/arrow_right"
-            android:drawablePadding="4dp"
-            android:layout_margin="4dp"/>
+            android:src="@drawable/arrow_right" />
 
     </LinearLayout>
 
