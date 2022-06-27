@@ -1,8 +1,19 @@
 <resources>
-    <string name="app_name">GeoQuiz</string>
-    <string name="question_text">Durham is the capital of North Carolina.</string>
+    <string name="app_name">AndroidQuiz</string>
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="correct">Correct!</string>
     <string name="incorrect">Incorrect… Try again!</string>
+    <string name="nextButton">Next</string>
+    <!-- Questions -->
+    <string name="model">Model objects are used for data, they have nothing to do with UI</string>
+    <string name="model_to_controller">Controller retrieves data requested by the Views</string>
+    <string name="views">View objects are related to the UI layer</string>
+    <string name="view_code">View objects are coded in HTML and jetpack compose</string>
+    <string name="view_controller">View objects send signals to the model</string>
+    <string name="controller_to_model">Controllers deal with data: retrieve, update, delete</string>
+    <string name="controller_to_view">Controller updates views with changes from model layer</string>
+    <string name="mvc_weakness">MVC architecture is good for both small and large projects</string>
+    <string name="activity">An activity is responsible for managing user interaction with a screen</string>
+    <string name="view_examples">ConstraintLayouts, Buttons and TextViews are Controller examples</string>
 </resources>

@@ -13,18 +13,30 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     // declare widgets
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
+    private lateinit var nextButton: Button
+    private lateinit var questionTextView: TextView
 
-    fun topToast(stringId: Int, timeout: Int) {
-        val toast = Toast.makeText(this, stringId, timeout)
-        toast.setGravity(Gravity.TOP, 0, 250)
-        toast.show()
-    }
+    private val questionBank = listOf(
+        Question(R.string.model, true),
+        Question(R.string.model_to_controller, true),
+        Question(R.string.views, true),
+        Question(R.string.view_code, false),
+        Question(R.string.view_controller, false),
+        Question(R.string.controller_to_model, true),
+        Question(R.string.controller_to_view, true),
+        Question(R.string.mvc_weakness, false),
+        Question(R.string.activity, true),
+        Question(R.string.view_examples, false)
+    )
+
+    private var currentIndex = 0
 
     // inflates a layout and puts it on screen
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,14 +45,45 @@ class MainActivity : AppCompatActivity() {
 
         trueButton = findViewById(R.id.trueBtn)
         falseButton = findViewById(R.id.falseBtn)
+        nextButton = findViewById(R.id.nextButton)
+        questionTextView = findViewById(R.id.question_text_view)
 
-        trueButton.setOnClickListener { view: View ->
-            topToast(R.string.incorrect, Toast.LENGTH_SHORT)
+        trueButton.setOnClickListener { _: View ->
+            checkAnswer(true)
         }
 
-        falseButton.setOnClickListener { view: View ->
-            topToast(R.string.correct, Toast.LENGTH_SHORT)
+        falseButton.setOnClickListener { _: View ->
+            checkAnswer(false)
         }
 
+        nextButton.setOnClickListener {
+            currentIndex = ( currentIndex + 1 ) % questionBank.size
+            updateQuestion()
+        }
+
+        updateQuestion()
+    }
+
+    private fun updateQuestion() {
+        val questionTextResId = questionBank[currentIndex].textResId
+        questionTextView.setText(questionTextResId)
+    }
+
+    private fun topToast(stringId: Int, timeout: Int) {
+        val toast = Toast.makeText(this, stringId, timeout)
+        toast.setGravity(Gravity.TOP, 0, 250)
+        toast.show()
+    }
+
+    private fun checkAnswer(userAnswer: Boolean) {
+        val correctAnswer = questionBank[currentIndex].answer
+
+        val messageResId = if (userAnswer == correctAnswer) {
+            R.string.correct
+        } else {
+            R.string.incorrect
+        }
+
+        topToast(messageResId, Toast.LENGTH_SHORT)
     }
 }

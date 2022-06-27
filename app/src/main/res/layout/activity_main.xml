@@ -1,44 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Default Empty Activity contains 2 views: constraint layout and textview
-    Views are the elements that enable user to interact with the app
-    Widgets: are everything the user can see and interact with
-    ViewGroups: are layouts that are a type of view that contains and arranges other views
-        In this case, the ConstraintLayout is the ViewGroup / layout
-
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" // as big as the parent
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content" // as big as contents require
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
- -->
-<!-- Main ViewGroup it holds the question view and buttons layout-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:background="@color/background"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/question_text"
+        android:id="@+id/question_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:padding="24dp"
-        android:text="@string/question_text"/>
+        tools:text="@string/model"
+        android:gravity="center"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -65,4 +41,13 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/WTHeader"
+        android:textColor="@color/black"
+        android:text="@string/nextButton"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="4dp"/>
 </LinearLayout>
