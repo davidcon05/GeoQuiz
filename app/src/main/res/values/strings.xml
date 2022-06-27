@@ -5,6 +5,7 @@
     <string name="correct">Correct!</string>
     <string name="incorrect">Incorrect… Try again!</string>
     <string name="nextButton">Next</string>
+    <string name="prevButton">Prev</string>
     <!-- Questions -->
     <string name="model">Model objects are used for data, they have nothing to do with UI</string>
     <string name="model_to_controller">Controller retrieves data requested by the Views</string>
