@@ -35,14 +35,12 @@ class MainActivity : AppCompatActivity() {
         falseButton = findViewById(R.id.falseBtn)
 
         trueButton.setOnClickListener { view: View ->
-            topToast(R.string.correct, Toast.LENGTH_SHORT)
-
-        }
-
-        falseButton.setOnClickListener { view: View ->
             topToast(R.string.incorrect, Toast.LENGTH_SHORT)
         }
 
+        falseButton.setOnClickListener { view: View ->
+            topToast(R.string.correct, Toast.LENGTH_SHORT)
+        }
 
     }
 }
