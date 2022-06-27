@@ -34,7 +34,11 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.controller_to_view, true),
         Question(R.string.mvc_weakness, false),
         Question(R.string.activity, true),
-        Question(R.string.view_examples, false)
+        Question(R.string.view_examples, false),
+        Question(R.string.nonexistent_state, true),
+        Question(R.string.stopped_state, false),
+        Question(R.string.paused_state, true),
+        Question(R.string.resumed_state, true)
     )
 
     private var currentIndex = 0
