@@ -8,7 +8,6 @@ package com.android.geoquiz
     like GeoQuiz needs only one activity, MainActivity. This is written in XML
  */
 
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity // compatibility support for older Androids
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +17,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import kotlin.math.roundToInt
 
 private const val TAG = "MainActivity"
 
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: ImageButton
     private lateinit var prevButton: ImageButton
     private lateinit var questionTextView: TextView
+    private lateinit var toastMsg: Toast
 
     private val questionBank = listOf(
         Question(R.string.model, true),
@@ -47,7 +48,13 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.onCreate_invoke, false)
     )
 
+    private var questionsAnswered = BooleanArray(questionBank.size)
+
     private var currentIndex = 0
+    private var correct = 0
+    private var response = false
+    private var counter = 0
+
 
     // inflates a layout and puts it on screen
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,13 +67,23 @@ class MainActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.nextButton)
         prevButton = findViewById(R.id.prevButton)
         questionTextView = findViewById(R.id.question_text_view)
+        toastMsg = Toast.makeText(this, "",Toast.LENGTH_SHORT)
 
-        trueButton.setOnClickListener { _: View ->
-            checkAnswer(true)
-        }
+        /*
+            1) Create turnOnButtons() and put it within the onClickListener for next/prev
+            2) Add answered 0/1 to data class? or some sort of array mutable list
 
-        falseButton.setOnClickListener { _: View ->
-            checkAnswer(false)
+         */
+        if(!response) {
+            trueButton.setOnClickListener { _: View ->
+                checkAnswer(true)
+                turnOffButton(trueButton, falseButton)
+            }
+
+            falseButton.setOnClickListener { _: View ->
+                checkAnswer(false)
+                turnOffButton(trueButton, falseButton)
+            }
         }
 
         prevButton.setOnClickListener {
@@ -79,14 +96,17 @@ class MainActivity : AppCompatActivity() {
         nextButton.setOnClickListener {
             currentIndex = ( currentIndex + 1 ) % questionBank.size
             updateQuestion()
+            turnOnButton(trueButton, falseButton)
         }
 
         questionTextView.setOnClickListener {
             currentIndex = ( currentIndex + 1 ) % questionBank.size
             updateQuestion()
+            turnOnButton(trueButton, falseButton)
         }
 
         updateQuestion()
+
     }
 
     override fun onStart() {
@@ -117,23 +137,54 @@ class MainActivity : AppCompatActivity() {
     private fun updateQuestion() {
         val questionTextResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionTextResId)
+        response = false
     }
 
-    private fun topToast(stringId: Int, timeout: Int) {
-        val toast = Toast.makeText(this, stringId, timeout)
-        toast.setGravity(Gravity.TOP, 0, 250)
-        toast.show()
+    private fun topToast(stringId: Int) {
+        toastMsg.setText(stringId)
+        toastMsg.setGravity(Gravity.TOP, 0, 250)
+        toastMsg.show()
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
         val correctAnswer = questionBank[currentIndex].answer
-
-        val messageResId = if (userAnswer == correctAnswer) {
-            R.string.correct
-        } else {
-            R.string.incorrect
+        var messageResId = R.string.incorrect
+        counter++
+        if (userAnswer == correctAnswer) {
+            messageResId = R.string.correct
+            correct++
         }
-
-        topToast(messageResId, Toast.LENGTH_SHORT)
+        response = true
+        questionsAnswered[currentIndex] = true
+        if(counter == questionBank.size) {
+            val score = calculateScore()
+            toastMsg.setText("Your score is $score%")
+            toastMsg.show()
+        } else {
+            topToast(messageResId)
+        }
     }
+
+    private fun turnOffButton(button1: Button, button2: Button) {
+        button1.isEnabled = !(button1.isEnabled)
+        button2.isEnabled = !(button2.isEnabled)
+        button1.setBackgroundColor(resources.getColor(R.color.white))
+        button2.setBackgroundColor(resources.getColor(R.color.white))
+    }
+
+    private fun turnOnButton(button1: Button, button2: Button) {
+        if (!questionsAnswered[currentIndex]) {
+            button1.isEnabled = !(button1.isEnabled)
+            button2.isEnabled = !(button2.isEnabled)
+            button1.setBackgroundColor(resources.getColor(R.color.buttons))
+            button2.setBackgroundColor(resources.getColor(R.color.buttons))
+        }
+    }
+
+    private fun calculateScore(): Int {
+        val correctAnswers:Double = correct.toDouble()
+        val questionBankSize:Double = questionBank.size.toDouble()
+        return (correctAnswers / questionBankSize * 100.0).roundToInt()
+    }
+
 }
