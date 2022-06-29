@@ -75,12 +75,12 @@ class MainActivity : AppCompatActivity() {
 
          */
         if(!response) {
-            trueButton.setOnClickListener { _: View ->
+            trueButton.setOnClickListener {
                 checkAnswer(true)
                 turnOffButton(trueButton, falseButton)
             }
 
-            falseButton.setOnClickListener { _: View ->
+            falseButton.setOnClickListener {
                 checkAnswer(false)
                 turnOffButton(trueButton, falseButton)
             }
