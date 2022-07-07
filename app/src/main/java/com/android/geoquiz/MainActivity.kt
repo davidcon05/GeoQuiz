@@ -14,40 +14,24 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.android.geoquiz.databinding.ActivityMainBinding
 import kotlin.math.roundToInt
 
 private const val TAG = "MainActivity"
+private const val KEY_INDEX = "index"
 
 class MainActivity : AppCompatActivity() {
     // declare widgets
     private lateinit var toastMsg: Toast
 
-    private val questionBank = listOf(
-        Question(R.string.model, true),
-        Question(R.string.model_to_controller, true),
-        Question(R.string.views, true),
-        Question(R.string.view_code, false),
-        Question(R.string.view_controller, false),
-        Question(R.string.controller_to_model, true),
-        Question(R.string.controller_to_view, true),
-        Question(R.string.mvc_weakness, false),
-        Question(R.string.activity, true),
-        Question(R.string.view_examples, false),
-        Question(R.string.nonexistent_state, true),
-        Question(R.string.stopped_state, false),
-        Question(R.string.paused_state, true),
-        Question(R.string.resumed_state, true),
-        Question(R.string.onCreate_invoke, false)
-    )
+    // lazy allows for making qVM a val instead of a var
+    private val quizViewModel: QuizViewModel by lazy {
+        ViewModelProvider(this).get(QuizViewModel::class.java)
+    }
 
-    private var questionsAnswered = BooleanArray(questionBank.size)
-
-    private var currentIndex = 0
     private var correct = 0
-    private var response = false
-    private var counter = 0
-
 
     // inflates a layout and puts it on screen
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,53 +40,106 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
+        quizViewModel.currentIndex = currentIndex
+
         toastMsg = Toast.makeText(this, "",Toast.LENGTH_SHORT)
 
         fun updateQuestion() {
-            val questionTextResId = questionBank[currentIndex].textResId
+            val questionTextResId = quizViewModel.currentQuestionText
             binding.questionTextView.setText(questionTextResId)
-            response = false
+            if(quizViewModel.questionsAnswered[quizViewModel.currentIndex]) {
+                turnOffButton(binding.trueBtn, binding.falseBtn)
+            }
         }
 
-        /*
-            1) Create turnOnButtons() and put it within the onClickListener for next/prev
-            2) Add answered 0/1 to data class? or some sort of array mutable list
+        if(quizViewModel.questionsAnswered[quizViewModel.currentIndex]) {
+            turnOffButton(binding.trueBtn, binding.falseBtn)
+        }
 
-         */
-        if(!response) {
-            binding.trueBtn.setOnClickListener {
-                checkAnswer(true)
-                turnOffButton(binding.trueBtn, binding.falseBtn)
-            }
+        binding.trueBtn.setOnClickListener {
+            checkAnswer(true, binding.trueBtn)
+            turnOffButton(binding.trueBtn, binding.falseBtn)
+        }
 
-            binding.falseBtn.setOnClickListener {
-                checkAnswer(false)
-                turnOffButton(binding.trueBtn, binding.falseBtn)
-            }
+        binding.falseBtn.setOnClickListener {
+            checkAnswer(false, binding.falseBtn)
+            turnOffButton(binding.trueBtn, binding.falseBtn)
         }
 
         binding.prevButton.setOnClickListener {
-            currentIndex = (currentIndex - 1) % questionBank.size
-            if(currentIndex < 0)
-                currentIndex = questionBank.size-1
+            quizViewModel.moveToPrev()
             updateQuestion()
+            turnOnButton(binding.trueBtn, binding.falseBtn)
+            quizViewModel.currentIndex--
         }
 
         binding.nextButton.setOnClickListener {
-            currentIndex = ( currentIndex + 1 ) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
             turnOnButton(binding.trueBtn, binding.falseBtn)
         }
 
         binding.questionTextView.setOnClickListener {
-            currentIndex = ( currentIndex + 1 ) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
             turnOnButton(binding.trueBtn, binding.falseBtn)
         }
 
         updateQuestion()
-
         setContentView(binding.root)
+    }
+
+
+
+    private fun topToast(stringId: Int) {
+        toastMsg.setText(stringId)
+        toastMsg.setGravity(Gravity.TOP, 0, 250)
+        toastMsg.show()
+    }
+
+    private fun checkAnswer(userAnswer: Boolean, button: Button) {
+        val correctAnswer = quizViewModel.currentQuestionAnswer
+        var messageResId = R.string.incorrect
+
+        if (userAnswer == correctAnswer) {
+            messageResId = R.string.correct
+            button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
+            correct++
+        } else {
+            button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
+        }
+
+        quizViewModel.questionsAnswered.set(quizViewModel.currentIndex, true)
+
+        if(quizViewModel.currentIndex == quizViewModel.questionBank.size) {
+            val score = calculateScore()
+            toastMsg.setText("Your score is $score%")
+            toastMsg.show()
+        } else {
+            topToast(messageResId)
+        }
+    }
+
+    private fun turnOffButton(button1: Button, button2: Button) {
+        button1.isEnabled = !(button1.isEnabled)
+        button2.isEnabled = !(button2.isEnabled)
+        quizViewModel.currentIndex++
+    }
+
+    private fun turnOnButton(button1: Button, button2: Button) {
+        if (!quizViewModel.questionsAnswered[quizViewModel.currentIndex]) {
+            button1.isEnabled = !(button1.isEnabled)
+            button2.isEnabled = !(button2.isEnabled)
+            button1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
+            button2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
+        }
+    }
+
+    private fun calculateScore(): Int {
+        val correctAnswers:Double = correct.toDouble()
+        val questionBankSize:Double = quizViewModel.questionBank.size.toDouble()
+        return (correctAnswers / questionBankSize * 100.0).roundToInt()
     }
 
     override fun onStart() {
@@ -130,51 +167,9 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onDestroy() called")
     }
 
-    private fun topToast(stringId: Int) {
-        toastMsg.setText(stringId)
-        toastMsg.setGravity(Gravity.TOP, 0, 250)
-        toastMsg.show()
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        Log.i(TAG, "onSaveSInstanceState")
+        savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)
     }
-
-    private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionBank[currentIndex].answer
-        var messageResId = R.string.incorrect
-        counter++
-        if (userAnswer == correctAnswer) {
-            messageResId = R.string.correct
-            correct++
-        }
-        response = true
-        questionsAnswered[currentIndex] = true
-        if(counter == questionBank.size) {
-            val score = calculateScore()
-            toastMsg.setText("Your score is $score%")
-            toastMsg.show()
-        } else {
-            topToast(messageResId)
-        }
-    }
-
-    private fun turnOffButton(button1: Button, button2: Button) {
-        button1.isEnabled = !(button1.isEnabled)
-        button2.isEnabled = !(button2.isEnabled)
-        button1.setBackgroundColor(resources.getColor(R.color.white))
-        button2.setBackgroundColor(resources.getColor(R.color.white))
-    }
-
-    private fun turnOnButton(button1: Button, button2: Button) {
-        if (!questionsAnswered[currentIndex]) {
-            button1.isEnabled = !(button1.isEnabled)
-            button2.isEnabled = !(button2.isEnabled)
-            button1.setBackgroundColor(resources.getColor(R.color.buttons))
-            button2.setBackgroundColor(resources.getColor(R.color.buttons))
-        }
-    }
-
-    private fun calculateScore(): Int {
-        val correctAnswers:Double = correct.toDouble()
-        val questionBankSize:Double = questionBank.size.toDouble()
-        return (correctAnswers / questionBankSize * 100.0).roundToInt()
-    }
-
 }
