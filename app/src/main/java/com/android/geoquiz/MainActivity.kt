@@ -17,17 +17,13 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import com.android.geoquiz.databinding.ActivityMainBinding
 import kotlin.math.roundToInt
 
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
     // declare widgets
-    private lateinit var trueButton: Button
-    private lateinit var falseButton: Button
-    private lateinit var nextButton: ImageButton
-    private lateinit var prevButton: ImageButton
-    private lateinit var questionTextView: TextView
     private lateinit var toastMsg: Toast
 
     private val questionBank = listOf(
@@ -59,15 +55,17 @@ class MainActivity : AppCompatActivity() {
     // inflates a layout and puts it on screen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+
         Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
-
-        trueButton = findViewById(R.id.trueBtn)
-        falseButton = findViewById(R.id.falseBtn)
-        nextButton = findViewById(R.id.nextButton)
-        prevButton = findViewById(R.id.prevButton)
-        questionTextView = findViewById(R.id.question_text_view)
         toastMsg = Toast.makeText(this, "",Toast.LENGTH_SHORT)
+
+        fun updateQuestion() {
+            val questionTextResId = questionBank[currentIndex].textResId
+            binding.questionTextView.setText(questionTextResId)
+            response = false
+        }
 
         /*
             1) Create turnOnButtons() and put it within the onClickListener for next/prev
@@ -75,38 +73,39 @@ class MainActivity : AppCompatActivity() {
 
          */
         if(!response) {
-            trueButton.setOnClickListener {
+            binding.trueBtn.setOnClickListener {
                 checkAnswer(true)
-                turnOffButton(trueButton, falseButton)
+                turnOffButton(binding.trueBtn, binding.falseBtn)
             }
 
-            falseButton.setOnClickListener {
+            binding.falseBtn.setOnClickListener {
                 checkAnswer(false)
-                turnOffButton(trueButton, falseButton)
+                turnOffButton(binding.trueBtn, binding.falseBtn)
             }
         }
 
-        prevButton.setOnClickListener {
+        binding.prevButton.setOnClickListener {
             currentIndex = (currentIndex - 1) % questionBank.size
             if(currentIndex < 0)
                 currentIndex = questionBank.size-1
             updateQuestion()
         }
 
-        nextButton.setOnClickListener {
+        binding.nextButton.setOnClickListener {
             currentIndex = ( currentIndex + 1 ) % questionBank.size
             updateQuestion()
-            turnOnButton(trueButton, falseButton)
+            turnOnButton(binding.trueBtn, binding.falseBtn)
         }
 
-        questionTextView.setOnClickListener {
+        binding.questionTextView.setOnClickListener {
             currentIndex = ( currentIndex + 1 ) % questionBank.size
             updateQuestion()
-            turnOnButton(trueButton, falseButton)
+            turnOnButton(binding.trueBtn, binding.falseBtn)
         }
 
         updateQuestion()
 
+        setContentView(binding.root)
     }
 
     override fun onStart() {
@@ -132,12 +131,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy() called")
-    }
-
-    private fun updateQuestion() {
-        val questionTextResId = questionBank[currentIndex].textResId
-        questionTextView.setText(questionTextResId)
-        response = false
     }
 
     private fun topToast(stringId: Int) {
