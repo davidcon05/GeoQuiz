@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
         }
 
-        quizViewModel.questionsAnswered.set(quizViewModel.currentIndex, true)
+        quizViewModel.questionsAnswered[quizViewModel.currentIndex] = true
 
         if(quizViewModel.currentIndex == quizViewModel.questionBank.size) {
             val score = calculateScore()

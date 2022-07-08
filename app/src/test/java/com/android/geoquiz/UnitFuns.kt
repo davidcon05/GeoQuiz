@@ -2,7 +2,6 @@ package com.android.geoquiz
 
 import org.junit.Test
 
-import org.junit.Assert.*
 import kotlin.math.roundToInt
 
 /**
@@ -13,7 +12,7 @@ import kotlin.math.roundToInt
 class UnitFuns {
 
     @Test
-    fun calculateScore(correct: Int, bankSize: Int):Int {
+    fun calculateScore(correct: Int, bankSize: Int): Int {
         return (correct.toDouble() / bankSize.toDouble() * 100).roundToInt()
     }
 }
