@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
         if (userAnswer == correctAnswer) {
             messageResId = R.string.correct
-            button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
+            button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.green))
             correct++
         } else {
             button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
@@ -131,8 +131,8 @@ class MainActivity : AppCompatActivity() {
         if (!quizViewModel.questionsAnswered[quizViewModel.currentIndex]) {
             button1.isEnabled = !(button1.isEnabled)
             button2.isEnabled = !(button2.isEnabled)
-            button1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
-            button2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
+            button1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.buttons))
+            button2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.buttons))
         }
     }
 
