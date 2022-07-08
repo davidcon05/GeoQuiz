@@ -6,6 +6,8 @@
     <string name="incorrect">Incorrect… Try again!</string>
     <string name="nextButton">Next</string>
     <string name="prevButton">Prev</string>
+    <string name="next_description">Next Question</string>
+    <string name="prev_description">Previous Question</string>
     <!-- Questions -->
     <string name="model">Model objects are used for data, they have nothing to do with UI</string>
     <string name="model_to_controller">Controller retrieves data requested by the Views</string>
@@ -22,4 +24,25 @@
     <string name="paused_state">Paused state occurs when an activity is in memory and partially visible but not in foreground, like during multi-window mode</string>
     <string name="resumed_state">Only one activity can be in the resumed state at a time, it is in memory, visible and in the foreground</string>
     <string name="onCreate_invoke">We call onCreate to control app state</string>
+    <!-- Answers -->
+    <string name="model_ans">TRUE</string>
+    <string name="model_to_controller_ans">TRUE</string>
+    <string name="views_ans">TRUE</string>
+    <string name="view_code_ans">FALSE</string>
+    <string name="view_controller_ans">FALSE</string>
+    <string name="controller_to_model_ans">TRUE</string>
+    <string name="controller_to_view_ans">TRUE</string>
+    <string name="mvc_weakness_ans">FALSE</string>
+    <string name="activity_ans">TRUE</string>
+    <string name="view_examples_ans">FALSE</string>
+    <string name="nonexistent_state_ans">TRUE</string>
+    <string name="stopped_state_ans">FALSE</string>
+    <string name="paused_state_ans">TRUE</string>
+    <string name="resumed_state_ans">TRUE</string>
+    <string name="onCreate_invoke_ans">FALSE</string>
+    <!-- Cheat Activity -->
+    <string name="warning_text">Are you sure you want to do this?</string>
+    <string name="show_answer_button">Show Answer</string>
+    <string name="cheat_button">Cheat!</string>
+    <string name="judgment_toast">Cheating is wrong...</string>
 </resources>

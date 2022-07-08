@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity // compatibility support for old
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -47,7 +48,9 @@ class MainActivity : AppCompatActivity() {
 
         fun updateQuestion() {
             val questionTextResId = quizViewModel.currentQuestionText
+            val questionAnswer = quizViewModel.currentQuestionAnswer.toString()
             binding.questionTextView.setText(questionTextResId)
+            binding.answer.text = questionAnswer
             if(quizViewModel.questionsAnswered[quizViewModel.currentIndex]) {
                 turnOffButton(binding.trueBtn, binding.falseBtn)
             }
@@ -72,18 +75,25 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
             turnOnButton(binding.trueBtn, binding.falseBtn)
             quizViewModel.currentIndex--
+            binding.answer.visibility = View.INVISIBLE
         }
 
         binding.nextButton.setOnClickListener {
             quizViewModel.moveToNext()
             updateQuestion()
             turnOnButton(binding.trueBtn, binding.falseBtn)
+            binding.answer.visibility = View.INVISIBLE
         }
 
         binding.questionTextView.setOnClickListener {
             quizViewModel.moveToNext()
             updateQuestion()
             turnOnButton(binding.trueBtn, binding.falseBtn)
+            binding.answer.visibility = View.INVISIBLE
+        }
+
+        binding.cheat.setOnClickListener {
+            binding.answer.visibility = View.VISIBLE
         }
 
         updateQuestion()
