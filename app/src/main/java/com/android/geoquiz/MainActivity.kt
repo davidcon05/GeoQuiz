@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity() {
         ViewModelProvider(this).get(QuizViewModel::class.java)
     }
 
-    private var correct = 0
-
     // inflates a layout and puts it on screen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,8 +98,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
-
-
     private fun topToast(stringId: Int) {
         toastMsg.setText(stringId)
         toastMsg.setGravity(Gravity.TOP, 0, 250)
@@ -115,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         if (userAnswer == correctAnswer) {
             messageResId = R.string.correct
             button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.green))
-            correct++
+            quizViewModel.correct += 1
         } else {
             button.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.red))
         }
@@ -123,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         quizViewModel.questionsAnswered[quizViewModel.currentIndex] = true
 
         if(quizViewModel.currentIndex == quizViewModel.questionBank.size) {
-            val score = calculateScore()
+            val score = quizViewModel.calculateScore()
             toastMsg.setText("Your score is $score%")
             toastMsg.show()
         } else {
@@ -144,12 +140,6 @@ class MainActivity : AppCompatActivity() {
             button1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.buttons))
             button2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.buttons))
         }
-    }
-
-    private fun calculateScore(): Int {
-        val correctAnswers:Double = correct.toDouble()
-        val questionBankSize:Double = quizViewModel.questionBank.size.toDouble()
-        return (correctAnswers / questionBankSize * 100.0).roundToInt()
     }
 
     override fun onStart() {

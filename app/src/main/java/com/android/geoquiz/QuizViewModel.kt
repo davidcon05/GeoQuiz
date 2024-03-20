@@ -1,12 +1,14 @@
 package com.android.geoquiz
 
 import androidx.lifecycle.ViewModel
+import kotlin.math.roundToInt
 
 private const val TAG = "QuizViewModel"
 
 class QuizViewModel : ViewModel() {
 
     var currentIndex = 0
+    var correct = 0
 
     val questionBank = listOf(
         Question(R.string.model, true),
@@ -42,5 +44,11 @@ class QuizViewModel : ViewModel() {
         currentIndex = (currentIndex - 1) % questionBank.size
         if(currentIndex < 0)
             currentIndex = questionBank.size - 1
+    }
+
+    fun calculateScore(): Int {
+        val correctAnswers:Double = correct.toDouble()
+        val questionBankSize:Double = questionBank.size.toDouble()
+        return (correctAnswers / questionBankSize * 100.0).roundToInt()
     }
 }
