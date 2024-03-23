@@ -1,14 +1,18 @@
 package com.android.geoquiz
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import java.lang.Exception
 import kotlin.math.roundToInt
 
 private const val TAG = "QuizViewModel"
+const val CURRENT_INDEX_KEY = "currentIndex"
 
-class QuizViewModel : ViewModel() {
+class QuizViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    var currentIndex = 0
     var correct = 0
+    var currentIndex: Int = savedStateHandle.get<Int>(CURRENT_INDEX_KEY) ?: 0
 
     val questionBank = listOf(
         Question(R.string.model, true),
@@ -34,21 +38,18 @@ class QuizViewModel : ViewModel() {
     val currentQuestionText: Int get() = questionBank[currentIndex].textResId
 
     fun moveToNext() {
+        if(currentIndex > questionBank.size - 1) currentIndex = 0
+        // Robust log message to help debug the following line of code
+        Log.d(TAG, "moveToNext() called: updating question text", Exception())
         currentIndex = (currentIndex + 1) % questionBank.size
-        currentIndex++
-        if(currentIndex == questionBank.size)
-            currentIndex = 0
     }
 
     fun moveToPrev() {
+        if(currentIndex < 0) currentIndex = questionBank.size - 1
         currentIndex = (currentIndex - 1) % questionBank.size
-        if(currentIndex < 0)
-            currentIndex = questionBank.size - 1
     }
 
-    fun calculateScore(): Int {
-        val correctAnswers:Double = correct.toDouble()
-        val questionBankSize:Double = questionBank.size.toDouble()
-        return (correctAnswers / questionBankSize * 100.0).roundToInt()
+    fun calculateScore(correct: Int, questionBankSize: Int): Int {
+        return (correct.toDouble() / questionBankSize * 100.0).roundToInt()
     }
 }

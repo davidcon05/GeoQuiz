@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         quizViewModel.questionsAnswered[quizViewModel.currentIndex] = true
 
         if(quizViewModel.currentIndex == quizViewModel.questionBank.size) {
-            val score = quizViewModel.calculateScore()
+            val score = quizViewModel.calculateScore(quizViewModel.correct, quizViewModel.questionBank.size)
             toastMsg.setText("Your score is $score%")
             toastMsg.show()
         } else {
