@@ -8,28 +8,28 @@ import org.junit.Test
 class QuizViewModelTest {
 
     @Test
-    fun calculateScore() {
+    fun `calculate score is a whole number`() {
         val savedStateHandle = SavedStateHandle()
         val quizViewModel = QuizViewModel(savedStateHandle)
         assertEquals(70, quizViewModel.calculateScore(7, 10))
     }
 
     @Test
-    fun providesExpectedQuestionText() {
+    fun `provides expected question text`() {
         val savedStateHandle = SavedStateHandle()
         val quizViewModel = QuizViewModel(savedStateHandle)
         assertEquals(R.string.model, quizViewModel.currentQuestionText)
     }
 
     @Test
-    fun providesExpectedQuestionAnswer() {
+    fun `provides expected question answer`() {
         val savedStateHandle = SavedStateHandle()
         val quizViewModel = QuizViewModel(savedStateHandle)
         assertEquals(true, quizViewModel.currentQuestionAnswer)
     }
 
     @Test
-    fun whenMoveNextNewQuestionLoads() {
+    fun `when move next new question loads`() {
         val savedStateHandle = SavedStateHandle(mapOf(CURRENT_INDEX_KEY to 13))
         val quizViewModel = QuizViewModel(savedStateHandle)
         assertEquals(R.string.resumed_state, quizViewModel.currentQuestionText)
